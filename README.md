@@ -2,7 +2,7 @@
 
 ## **About the Project**
 
-_**Time_Tracker** is a simple todo application built using `React JS` and `Node JS` & MongoDB. Users need to register and login, and after the authorisation, they can generate Todo's & create tasks using this application._
+_**Time_Tracker** is a simple todo application built using `React JS` and `Node JS` & `MongoDB`. Users need to register and login, and after the authorisation, they can generate Todo's & create tasks using this application._
 
 ---
 **Developed By Me**
