@@ -19,11 +19,10 @@ app.use(cors({
 
 //db
 dbConnect()
-
 app.get("/", (req, res) => {
     res.send("Welocme to TODO App")
 })
-app.use("/api/users", userRoutes);
+app.use("/api/v1", userRoutes);
 
 app.use("/api", taskRoutes);
 app.use("/api", todoRoutes);
