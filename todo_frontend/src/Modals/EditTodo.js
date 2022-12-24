@@ -1,45 +1,43 @@
 import React, { useContext, useState } from "react";
-import SpinnerContext from ".././Context/Spinner/SpinnerContext";
-import TodoContext from ".././Context/Todo/TodoContext";
+import SpinnerContext from "../Context/Spinner/SpinnerContext";
+import TodoContext from "../Context/Todo/TodoContext";
 
-const EditTodoModal = ({ editTodoModal, editTodo }) => {
-  // console.log(editTodo)
+const EditTodoModal = ({ setShowEditTodoModal, todoToEdit }) => {
+  // console.log(todoToEdit)
 
   const todoContext = useContext(TodoContext);
-  const { edit } = todoContext;
+  const { editTodo } = todoContext;
   const spinnerContext = useContext(SpinnerContext);
 
-  const [title, setTitle] = useState(editTodo.current.title);
-  const [color, setColor] = useState(editTodo.current.color);
-  const { load, setLoad } = spinnerContext;
+  const [title, setTitle] = useState(todoToEdit.current.title);
+  const [color, setColor] = useState(todoToEdit.current.color);
+  const { isLoading, setIsLoading } = spinnerContext;
 
   const handleDone = () => {
-    if (title.length === 0) alert("no empty title...   ");
+    if (title.length === 0) alert("no empty title   ");
 
-    setLoad(true);
+    setIsLoading(true);
 
     setTimeout(() => {
-      setLoad(false);
+      setIsLoading(false);
     }, 2000);
-
     console.log("in todo display useeffect");
-
-    edit(editTodo.current._id, {
+    editTodo(todoToEdit.current._id, {
       title,
       color,
     });
-    editTodoModal(false);
+    setShowEditTodoModal(false);
   };
 
   const handleCancle = () => {
-    editTodoModal(false);
+    setShowEditTodoModal(false);
   };
 
-  const handleChange = (e) => {
+  const handleOnChange = (e) => {
     setTitle(e.target.value);
   };
 
-  const handleKey = (e) => {
+  const handleKeyUp = (e) => {
     // console.log(e.key)
     if (e.code === "Enter") handleDone();
   };
@@ -59,8 +57,8 @@ const EditTodoModal = ({ editTodoModal, editTodo }) => {
           </label>
           <br />
           <input
-            onKeyUp={handleKey}
-            onChange={handleChange}
+            onKeyUp={handleKeyUp}
+            onChange={handleOnChange}
             className="text-base sm:text-[20px] w-[230px] sm:w-[600px] mt-10 py-3 pl-3 rounded-xl"
             name="title"
             id="title"
@@ -82,8 +80,8 @@ const EditTodoModal = ({ editTodoModal, editTodo }) => {
               className="cursor-pointer border-2 border-black w-[20px] h-[20px] bg-blue-500"
             ></div>
             <div
-              onClick={() => setColor("green")}
-              className="cursor-pointer border-2 border-black w-[20px] h-[20px] bg-green-500"
+              onClick={() => setColor("orange")}
+              className="cursor-pointer border-2 border-black w-[20px] h-[20px] bg-orange-500"
             ></div>
             <div
               onClick={() => setColor("pink")}

@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import TaskContext from ".././Context/Task/TaskContext";
+import TaskContext from "../Context/Task/TaskContext";
 import { toast } from "react-hot-toast";
 
-const TaskModal = ({ setTaskModal }) => {
+const TaskModal = ({ setShowTaskModal }) => {
   const taskContext = useContext(TaskContext);
   const { addTask } = taskContext;
   const [task, setTask] = useState("");
@@ -17,27 +17,28 @@ const TaskModal = ({ setTaskModal }) => {
       return;
     }
 
-    setTaskModal(false);
+    setShowTaskModal(false);
     addTask(todoId.todoId, task);
     toast.success("TASK Added successfully");
   };
 
-  const handleCancel = () => {
-    setTaskModal(false);
+  const handleCancle = () => {
+    setShowTaskModal(false);
   };
 
-  const handleChange = (e) => {
+  const handleOnChange = (e) => {
     setTask(e.target.value);
   };
 
-  const handleKey = (e) => {
+  const handleKeyUp = (e) => {
+    // console.log(e.key)
     if (e.code === "Enter") handleDone();
   };
 
   return (
     <>
       <div
-        onClick={handleCancel}
+        onClick={handleCancle}
         className="bg-[#161622] opacity-[.85] absolute top-0 h-[95vh] flex justify-center items-center w-full z-[2] "
       ></div>
       <div className="bg-[#191920] absolute mx-auto top-[30%] z-[10] py-10 px-10 sm:px-20 rounded-2xl border-[1px] border-[#A6B2BC]">
@@ -50,8 +51,8 @@ const TaskModal = ({ setTaskModal }) => {
           </label>
           <br />
           <input
-            onKeyUp={handleKey}
-            onChange={handleChange}
+            onKeyUp={handleKeyUp}
+            onChange={handleOnChange}
             className="w-[230px] sm:w-[650px] mt-10 py-2 pl-3 rounded-xl"
             name="title"
             id="title"
@@ -66,10 +67,10 @@ const TaskModal = ({ setTaskModal }) => {
             Done
           </button>
           <button
-            onClick={handleCancel}
+            onClick={handleCancle}
             className="px-6 py-1 rounded-lg bg-[#87898b] duration-200 ease-in-out hover:bg-[#363637]"
           >
-            Cancel
+            Cancle
           </button>
         </div>
       </div>

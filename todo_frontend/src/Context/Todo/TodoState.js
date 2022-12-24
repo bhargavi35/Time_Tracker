@@ -1,19 +1,20 @@
 import axios from "axios";
 import { useState } from "react";
-import { useCookies } from "react-cookie";
 import TodoContext from "./TodoContext";
+import { useCookies } from "react-cookie";
 
-export const TodoState = (props) => {
-    const [cookie, setCookie] = useCookies();
-    const [todo, setTodo] = useState([]);
+const TodoState = (props) => {
+    const [cookies, setCookie] = useCookies();
 
+    const [todos, setTodos] = useState([]);
     const headers = {
-        "Contenet-Type": "application/json",
-        token: cookie.token,
+        "Content-Type": "application/json",
+        token: cookies.token,
     };
 
-    //get Todo
+    // getting todos
     const getTodos = async () => {
+        // console.log(headers)//no cookie
         const res = await axios.get(
             // `http://localhost:5000/api/getTodos`,
             // `https://hungry-coat-pike.cyclic.app/api/getTodos`,
@@ -23,11 +24,11 @@ export const TodoState = (props) => {
                 headers,
             }
         );
-        console.log(res.data.todo);
-        setTodo(res.data.todo);
+        console.log(res.data.todos);
+        setTodos(res.data.todos);
     };
 
-    //adding todo
+    // adding todo
     const createTodo = async (title, color) => {
         const res = await axios.post(
             // `http://localhost:5000/api/createTodos`,
@@ -43,30 +44,10 @@ export const TodoState = (props) => {
             }
         );
         // console.log(res.data.todo)
-        setTodo(todo.concat(res.data.todo));
+        setTodos(todos.concat(res.data.todo));
     };
 
-    //edit todo
-    const updateTodo = async (todoId, update) => {
-        const res = await axios.put(
-            // `http://localhost:5000/api/updateTodos/${todoId}`, update,
-            // `https://hungry-coat-pike.cyclic.app/api/updateTodos/${todoId}`, update,
-
-            `${process.env.REACT_APP_API}/api/updateTodos/${todoId}`,
-            update,
-            {
-                headers,
-            }
-        );
-        const index = todo.indexOf(todo.filter((e) => e._id === todoId)[0]);
-        const newTodos = todo.slice();
-        newTodos.splice(index, 1, res.data.updatedTodo);
-        // console.log(res.data.todo)
-        setTodo(newTodos);
-    };
-
-    ///delet todo
-
+    // delete todo
     const deleteTodo = async (todoId) => {
         const res = await axios.delete(
             // `http://localhost:5000/api/deleteTodos/${todoId}`,
@@ -78,23 +59,46 @@ export const TodoState = (props) => {
             }
         );
         console.log(res);
-        setTodo(todo.filter((e) => e._id != res.data.deleteTodo._id));
+        setTodos(todos.filter((e) => e._id !== res.data.deletedTodo._id));
+    };
+
+    // edit todo
+    const editTodo = async (todoId, update) => {
+        const res = await axios.put(
+            // `http://localhost:5000/api/updateTodos/${todoId}`, update,
+            // `https://hungry-coat-pike.cyclic.app/api/updateTodos/${todoId}`, update,
+
+            `${process.env.REACT_APP_API}/api/updateTodos/${todoId}`,
+            update,
+            {
+                headers,
+            }
+        );
+        // const index = todos.indexOf(res.data.editedTodo);
+        const index = todos.indexOf(todos.filter((e) => e._id === todoId)[0]);
+        const newTodos = todos.slice();
+        newTodos.splice(index, 1, res.data.editedTodo);
+
+        // console.log(todos)
+        setTodos(newTodos);
     };
 
     return (
         <TodoContext.Provider
             value={{
                 getTodos,
-                setTodo,
-                todo,
+                setTodos,
+                todos,
                 createTodo,
-                updateTodo,
                 deleteTodo,
+                editTodo,
                 setCookie,
-                cookie,
+                cookies,
             }}
         >
             {props.children}
         </TodoContext.Provider>
     );
 };
+
+export default TodoState;

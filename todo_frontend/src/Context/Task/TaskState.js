@@ -1,39 +1,40 @@
 import axios from "axios";
 import { useState } from "react";
+import TodoContext from "./TaskContext";
 import { useCookies } from "react-cookie";
-import TaskContext from "./TaskContext";
 
-export const TaskState = (props) => {
-    const [cookie, setCookie] = useCookies();
-    const [task, setTask] = useState([]);
+const TaskState = (props) => {
+    const [cookies, setCookie] = useCookies();
+
+    const [tasks, setTasks] = useState([]);
 
     const headers = {
-        "Contenet-Type": "application/json",
-        token: cookie.token,
+        "Content-Type": "application/json",
+        token: cookies.token,
     };
 
-    //get task
+    // getting tasks
     const getTasks = async (todoId) => {
         const res = await axios.get(
             // `http://localhost:5000/api/getTasks/${todoId}`,
-            `https://hungry-coat-pike.cyclic.app/api/getTasks/${todoId}`,
+            // `https://hungry-coat-pike.cyclic.app/api/getTasks/${todoId}`,
 
-            // `${process.env.REACT_APP_API}/getTasks/${todoId}`,
+            `${process.env.REACT_APP_API}/api/getTasks/${todoId}`,
             {
                 headers,
             }
         );
-        // console.log(res.data.task)
-        setTask(res.data.task);
+        console.log(res.data.tasks);
+        setTasks(res.data.tasks);
     };
 
-    //adding task
+    // add task
     const addTask = async (todoId, task) => {
-        const res = await axios.post(
+        const res = await axios.put(
             // `http://localhost:5000/api/addTask/${todoId}`,
-            `https://hungry-coat-pike.cyclic.app/api/addTask/${todoId}`,
+            // `https://hungry-coat-pike.cyclic.app/api/addTask/${todoId}`,
 
-            // `${process.env.REACT_APP_API}/addTask/${todoId}`,
+            `${process.env.REACT_APP_API}/api/addTask/${todoId}`,
             {
                 main: task,
             },
@@ -41,79 +42,72 @@ export const TaskState = (props) => {
                 headers,
             }
         );
-        const newTasks = res.data.todo.task.slice();
-        setTask(newTasks);
+        const newTasks = res.data.todo.tasks.slice();
+        // setTasks(res.data.savedTask.tasks.slice())
+        setTasks(newTasks);
+        console.log(res.data.todo.tasks);
     };
 
     // check task
     const checkTask = async (todoId, taskId) => {
         console.log(headers);
         const res = await axios.put(
-            // `http://localhost:5000/api/checkTask/${todoId}/${taskId},{}`,
-            `https://hungry-coat-pike.cyclic.app/api/checkTask/${todoId}/${taskId},{}`,
+            // `http://localhost:5000/api/checkTask/api/${todoId}/${taskId},{}`,
+            // `https://hungry-coat-pike.cyclic.app/api/checkTask/${todoId}/${taskId},{}`,
 
-            // `${process.env.REACT_APP_API}/checkTask/${todoId}/${taskId}`, {},
+            `${process.env.REACT_APP_API}/api/checkTask/${todoId}/${taskId}`,
+            {},
             {
                 headers,
             }
         );
         console.log(res);
-        const newTasks = res.data.todo.task.slice();
-        setTask(newTasks);
+        const newTasks = res.data.todo.tasks.slice();
+        setTasks(newTasks);
     };
 
-    //edit task
-    const updateTask = async (todoId, taskId, update) => {
-        console.log(cookie.token);
-
+    // edit task
+    const editTask = async (todoId, taskId, update) => {
+        console.log(cookies.token);
         const res = await axios.put(
             // `http://localhost:5000/api/updateTask/${todoId}/${taskId}`, update,
-            `https://hungry-coat-pike.cyclic.app/api/updateTask/${todoId}/${taskId}`,
-            update,
+            // `https://hungry-coat-pike.cyclic.app/api/updateTask/${todoId}/${taskId}`,
+            // update,
 
-            // `${ process.env.REACT_APP_API } / updateTask / ${ todoId } / ${ taskId }`, update,
+            `${process.env.REACT_APP_API} /api/ updateTask / ${todoId} / ${taskId}`,
+            update,
             {
                 headers,
             }
         );
         console.log(res);
-        const newtasks = res.data.todo.task.slice();
-        setTask(newtasks);
+        const newTasks = res.data.todo.tasks.slice();
+        setTasks(newTasks);
     };
 
-    ///delet task
-
+    // delete task
     const deleteTask = async (todoId, taskId) => {
-        const res = await axios.delete(
-            // `http://localhost:5000/api/deleteTask/${todoId}/${taskId}`,
-            `https://hungry-coat-pike.cyclic.app/api/deleteTask/${todoId}/${taskId}`,
+        const res = await axios.put(
+            // `http://localhost:5000/api/deleteTask/api/${todoId}/${taskId}`,
+            // `https://hungry-coat-pike.cyclic.app/api/deleteTask/${todoId}/${taskId}`,
 
-
-            // `${process.env.REACT_APP_API}/deleteTask/${todoId}/${taskId}`,
+            `${process.env.REACT_APP_API}/api/deleteTask/${todoId}/${taskId}`,
             {
                 headers,
             }
         );
-        console.log(res);
-        const newtasks = res.data.todo.task.slice();
-        setTask(newtasks);
+        const newTasks = res.data.todo.tasks.slice();
+        setTasks(newTasks);
+        // console.log(res);
     };
 
     return (
-        <TaskContext.Provider
-            value={{
-                getTasks,
-                setTask,
-                task,
-                addTask,
-                updateTask,
-                checkTask,
-                deleteTask,
-                setCookie,
-                cookie,
-            }}
+        <TodoContext.Provider
+            value={{ getTasks, tasks, addTask, checkTask, editTask, deleteTask }}
         >
             {props.children}
-        </TaskContext.Provider>
+        </TodoContext.Provider>
     );
 };
+
+export default TaskState;

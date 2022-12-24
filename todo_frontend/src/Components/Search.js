@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import TodoContext from "../Context/Todo/TodoContext";
 import { useCookies } from "react-cookie";
 import { toast } from "react-hot-toast";
-import TodoContext from "../Context/Todo/TodoContext";
 
 const Search = () => {
   const [cookies, setCookie] = useCookies();
@@ -16,21 +16,24 @@ const Search = () => {
     token: `${cookies.token}`,
   };
 
-  const handleChange = async (e) => {
+  const handleOnchange = async (e) => {
     setSearch(e.target.value);
+    // console.log(search)
   };
+
   const handleSearch = async () => {
     const res = await axios.get(
-      // `${process.env.REACT_APP_API}/searchTodos`
-      `https://hungry-coat-pike.cyclic.app/api/searchTodos`,
+      `${process.env.REACT_APP_API}/api/searchTodos`,
+      // `https://hungry-coat-pike.cyclic.app/api/searchTodos`,
 
       {
         headers,
         params: {
           search,
         },
-      }
-    );
+      });
+
+    // console.log(res)
     if (res.data.todos.length === 0) {
       toast.error("no such todo or task exists");
       return;
@@ -47,7 +50,6 @@ const Search = () => {
 
     handleSearch();
   }, [search]);
-
   return (
     <div className="w-full mt-8">
       <input
@@ -55,7 +57,7 @@ const Search = () => {
         placeholder="Search.."
         name="search"
         id="search"
-        onChange={handleChange}
+        onChange={handleOnchange}
         type="text"
       />
     </div>

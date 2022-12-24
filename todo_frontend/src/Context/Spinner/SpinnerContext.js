@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const SpinnerContext=createContext()
+const SpinnerContext = createContext();
 
 export default SpinnerContext;

@@ -1,51 +1,47 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
 import addLogo from "../../Assests/add-btn.svg";
 import leftArrow from "../../Assests/left-arrow.svg";
-
-import Card from "./Card";
+import TaskCard from "./TaskCard";
+import { useNavigate, useParams } from "react-router-dom";
+import TaskContext from "../../Context/Task/TaskContext";
+import TaskModal from "../../Modals/TaskModal";
+import EditTaskModal from "../../Modals/EditTask";
+import Spinner from "../Main/Spinner";
 import SpinnerContext from "../../Context/Spinner/SpinnerContext";
 import TodoContext from "../../Context/Todo/TodoContext";
-import TaskContext from "../../Context/Task/TaskContext";
-import EditTask from "../../Modals/EditTask";
-import TaskModal from "../../Modals/TaskModal";
-import Spinner from "../Main/Spinner";
 
-const Screen = () => {
+const TaskScreen = () => {
   const todoContext = useContext(TodoContext);
   const { todos, setTodos } = todoContext;
-
   const taskContext = useContext(TaskContext);
   const { tasks, getTasks } = taskContext;
   const { todoId, todoTitle } = useParams();
-
   const spinnerContext = useContext(SpinnerContext);
-  const { load, setLoad } = spinnerContext;
-  const [editTask, setEditTask] = useState("");
+  const { isLoading, setIsLoading } = spinnerContext;
+  const [taskIdforEdit, setTaskIdforEdit] = useState("");
 
-  const [EditTaskModal, setEditTaskModal] = useState(false);
-  const [taskModal, setTaskModal] = useState(false);
+  const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+ 
+  const [showTaskModal, setShowTaskModal] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleClickBack = () => {
+  const handleClickOnBack = () => {
     navigate("/");
   };
 
   const handleAddTask = () => {
-    setTaskModal(true);
+    setShowTaskModal(true);
   };
 
   useEffect(() => {
-    setLoad(true);
+    setIsLoading(true);
     setTimeout(() => {
-      setLoad(false);
+      setIsLoading(false);
     }, 2000);
 
     getTasks(todoId);
   }, [todoId]);
-
   return (
     <div className="relative bg-[#191920]  h-[95vh] w-[100vw] sm:w-[80vw] flex flex-col items-center">
       <div className="text-[12px] sm:text-[18px] absolute right-5 top-5 font-extrabold	flex gap-5">
@@ -68,7 +64,10 @@ const Screen = () => {
       </div>
 
       <div className="w-[80%] sm:w-[60%]  mt-10">
-        <button onClick={handleClickBack} className="flex items-center gap-3 ">
+        <button
+          onClick={handleClickOnBack}
+          className="flex items-center gap-3 "
+        >
           <div className="px-3 py-3 bg-[#21202a] rounded-xl">
             <img className="invert h-[19px] mx-auto" src={leftArrow} alt="" />
           </div>
@@ -88,12 +87,12 @@ const Screen = () => {
       </button>
 
       <div className="overflow-y-scroll w-full flex flex-col items-center mb-10 mt-12">
-        {load || !tasks || tasks.length === 0 ? (
+        {isLoading || !tasks || tasks.length === 0 ? (
           <div className="absolute top-[50%] left-[50%]">
             {tasks.length === 0 && (
               <h1 className="text-[#fd77a1] font-bold">No tasks</h1>
             )}
-            <Spinner load={true} />
+            <Spinner isLoading={true} />
           </div>
         ) : (
           <>
@@ -112,13 +111,13 @@ const Screen = () => {
                   .filter((e) => {
                     return e.checked != true;
                   })
-                  .map((el) => {
+                  .map((element) => {
                     return (
-                      <Card
-                        key={el._id}
-                        task={el}
-                        setEditTaskModal={setEditTaskModal}
-                        setEditTask={setEditTask}
+                      <TaskCard
+                        key={element._id}
+                        task={element}
+                        setShowEditTaskModal={setShowEditTaskModal}
+                        setTaskIdforEdit={setTaskIdforEdit}
                       />
                     );
                   })}
@@ -140,13 +139,13 @@ const Screen = () => {
                   .filter((e) => {
                     return e.checked == true;
                   })
-                  .map((el) => {
+                  .map((element) => {
                     return (
-                      <Card
-                        key={el._id}
-                        task={el}
-                        setEditTaskModal={setEditTaskModal}
-                        setEditTask={setEditTask}
+                      <TaskCard
+                        key={element._id}
+                        task={element}
+                        setShowEditTaskModal={setShowEditTaskModal}
+                        setTaskIdforEdit={setTaskIdforEdit}
                       />
                     );
                   })}
@@ -156,12 +155,15 @@ const Screen = () => {
         )}
       </div>
 
-      {taskModal && <TaskModal setTaskModal={setTaskModal} />}
-      {EditTaskModal && (
-        <EditTask editTask={editTask} setEditTaskModal={setEditTaskModal} />
+      {showTaskModal && <TaskModal setShowTaskModal={setShowTaskModal} />}
+      {showEditTaskModal && (
+        <EditTaskModal
+          taskIdforEdit={taskIdforEdit}
+          setShowEditTaskModal={setShowEditTaskModal}
+        />
       )}
     </div>
   );
 };
 
-export default Screen;
+export default TaskScreen;

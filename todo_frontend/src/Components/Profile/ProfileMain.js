@@ -1,12 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-import Avatar from "../../Assests/avtar.png";
+import Avtar from "../../Assests/avtar.png";
 import TodoContext from "../../Context/Todo/TodoContext";
+import leftArrow from "../..//Assests/left-arrow.svg";
 import UserContext from "../../Context/User/UserContext";
-import leftArrow from "../../Assests/left-arrow.svg"
-
-const Profile = () => {
+import { useNavigate } from "react-router-dom";
+const ProfileMain = () => {
   const userContext = useContext(UserContext);
   const { getUser, user } = userContext;
   const todoContext = useContext(TodoContext);
@@ -18,14 +16,13 @@ const Profile = () => {
     getUser();
   });
 
-  const handleClickBack = () => {
+  const handleClickOnBack = () => {
     navigate("/");
   };
-  
   return (
     <div className="w-full h-[95vh] bg-[#191920] flex justify-center items-center">
       <div className="w-[70%] bg-[#21212b]  rounded-xl flex flex-col justify-center py-3 gap-6">
-        <img className="h-[200px] invert block mx-auto" src={Avatar} alt="" />
+        <img className="h-[200px] invert block mx-auto" src={Avtar} alt="" />
         <h4 className="text-center text-[#fd77a1] font-bold">@{user.name}</h4>
         <h4 className="text-center text-[#eaeaea] font-bold">{user.email}</h4>
         <h4 className="text-center my-3  text-[#419796] font-bold">
@@ -36,7 +33,7 @@ const Profile = () => {
 
       <div className="w-[80%] sm:w-[60%]  mt-10 fixed top-3">
         <button
-          onClick={handleClickBack}
+          onClick={handleClickOnBack}
           className="flex items-center gap-3 "
         >
           <div className="px-3 py-3 bg-[#21202a] rounded-xl">
@@ -49,4 +46,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileMain;

@@ -1,24 +1,29 @@
-import './App.css';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { Toaster } from "react-hot-toast"
+import React from "react";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import MainScreen from "./Components/Main/MainScreen";
+import SideMenu from "./Components/Main/SideMenu";
+import { Toaster } from "react-hot-toast";
 
-import Login from './Components/Register/Login';
-import Signup from './Components/Register/Signup';
-import Profile from './Components/Profile/Profile';
-import Navbar from './Components/Navbar';
-import Screen from './Components/TaskDisplay/Screen';
-import Main from './Components/Main/Main';
+import NavBar from "./Components/NavBar";
+import ProfileMain from "./Components/Profile/ProfileMain";
+import SignUp from "./Components/Reigister/SignUp";
 
-import { TodoState } from './Context/Todo/TodoState';
-import { TaskState } from './Context/Task/TaskState';
-import { SpinnerState } from './Context/Spinner/SpinnerState';
-import { UserState } from './Context/User/UserState';
-import Side from './Components/Main/Side';
+import TaskScreen from "./Components/TaskDisplay/TaskScreen";
+import SpinnerState from "./Context/Spinner/SpinnerState";
+import TaskState from "./Context/Task/TaskState";
 
-function App() {
+import TodoState from "./Context/Todo/TodoState";
+import Login from "./Components/Reigister/Login";
+import UserState from "./Context/User/UserState";
+
+const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   return (
     <>
       <TodoState>
@@ -26,51 +31,67 @@ function App() {
           <SpinnerState>
             <UserState>
               <Toaster
-                position='top-right'
+                position="top-right"
                 reverseOrder={false}
                 gutter={8}
                 containerClassName=""
                 containerStyle={{}}
                 toastOptions={{
+                  // Define default options
                   className: "",
                   duration: 5000,
                   style: {
                     background: "#363636",
-                    color: "#fff"
+                    color: "#fff",
                   },
 
+                  // Default options for specific types
                   success: {
                     duration: 3000,
                     theme: {
                       primary: "green",
                       secondary: "black",
-                    }
-                  }
-
+                    },
+                  },
                 }}
               />
-              {(location.pathname !== '/signup') && (location.pathname !== "/login") ? <Navbar /> : (<></>)}
 
-
-              <div className='flex'>
-
-                {(location.pathname !== '/signup') && (location.pathname !== "/login") ? (<Side />) : (<></>)}
+              {location.pathname !== "/signup" &&
+                location.pathname !== "/login" ? (
+                <NavBar />
+              ) : (
+                <></>
+              )}
+              <div className="flex">
+                {location.pathname !== "/signup" &&
+                  location.pathname !== "/login" ? (
+                  <SideMenu />
+                ) : (
+                  <></>
+                )}
 
                 <Routes>
-                  <Route path='/' element={<Main />} />
-                  <Route path='/profile' elemen={<Profile />} />
-                  <Route path='/:todoId/:todoTitle' element={<Screen />} />
-                  <Route path='/signup' element={<Signup />} />
-                  <Route path='/login' element={<Login />} />
+                  <Route exact path="/" element={<MainScreen />}></Route>
+                  <Route
+                    exact
+                    path="/:todoId/:todoTitle"
+                    element={<TaskScreen />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/profile"
+                    element={<ProfileMain />}
+                  ></Route>
+                  <Route exact path="/signup" element={<SignUp />}></Route>
+                  <Route exact path="/login" element={<Login />}></Route>
                 </Routes>
               </div>
             </UserState>
           </SpinnerState>
         </TaskState>
       </TodoState>
-
     </>
   );
-}
+};
 
 export default App;

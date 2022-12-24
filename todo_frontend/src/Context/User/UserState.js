@@ -3,32 +3,33 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import UserContext from "./UserContext";
 
-export const UserState = (props) => {
-    const [cookie, setCookie] = useCookies()
-    const [user, setUser] = useState([])
+const UserState = (props) => {
+    const [cookies, setCookie] = useCookies();
+    const [user, setUser] = useState({});
+    // const [token , setToken] =
 
     const headers = {
-        'Contenet-Type': "application/json",
-        "token": cookie.token
-    }
+        "Content-Type": "application/json",
+        token: cookies.token,
+    };
 
-    //get User
-    const getUsers = async () => {
+    const getUser = async () => {
         const res = await axios.get(
-            `http://localhost:5000/api/users/getUser`,
-
-            // `${process.env.REACT_APP_API}/users/getUser`,
+            // `http://localhost:5000/api/v1/getUser`,
+            `https://hungry-coat-pike.cyclic.app/api/v1/getUser`,
+            // `${process.env.REACT_APP_API}/api/v1/getUser`,
             {
-                headers
-            })
+                headers,
+            });
         // console.log(res)
-        setUser(res.data.user)
-    }
-
+        setUser(res.data.user);
+    };
 
     return (
-        <UserContext.Provider value={{ getUsers, user, setUser }}>
+        <UserContext.Provider value={{ getUser, user, setUser }}>
             {props.children}
         </UserContext.Provider>
-    )
-}
+    );
+};
+
+export default UserState;
