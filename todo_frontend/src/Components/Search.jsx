@@ -22,6 +22,7 @@ const Search = () => {
   const handleSearch = async () => {
     const res = await axios.get(
       // `${process.env.REACT_APP_API}/searchTodos`
+      `https://hungry-coat-pike.cyclic.app/api/searchTodos`,
 
       {
         headers,

@@ -26,9 +26,10 @@ const Login = () => {
       return;
     }
     const res = await axios.post(
-      "http://localhost:5000/api/users/loginUser",
+      // "http://localhost:5000/api/v1/signup",
+      `https://hungry-coat-pike.cyclic.app/api/v1/signup`,
 
-      // `${process.env.REACT_APP_API}/users/loginUser`,
+      // `${process.env.REACT_APP_API}/v1/signup`,
       {
         email,
         password,

@@ -25,8 +25,9 @@ const Signup = () => {
     }
 
     const res = await axios.post(
-      // `${process.env.REACT_APP_API}/v1/createUser`,
-      "http://localhost:5000/api/users/createUser",
+      // `${process.env.REACT_APP_API}/v1/login`,
+      `https://hungry-coat-pike.cyclic.app/api/v1/login`,
+      // "http://localhost:5000/api/users/v1/login",
       {
         name,
         email,
