@@ -40,7 +40,7 @@ _**Time_Tracker** is a simple todo application built using `React JS` and `Node 
 
 <br/>
 
-**ChatApp**
+**Todo's App**
 
 ![Todo's]()
 
